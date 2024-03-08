@@ -1,4 +1,4 @@
-const 정답 = "APPLE";
+//const 정답 = "APPLE";
 
 let index = 0;
 let attempts = 0; // 몇번 시도했는가 변수
@@ -23,8 +23,16 @@ function appStart() {
     clearInterval(timer);
   };
 
-  const handleEnterKey = () => {
+  const handleEnterKey = async () => {
+    // await라는 구문을 사용하기위해 함수 앞에 async를 추가
     let 맞은_개수 = 0;
+    const 응답 = await fetch("/answer"); // fetch는 자바스크립트에서 서버로 요청을 보낼 때 쓰는 함수
+    console.log("응답", 응답);
+    const 정답_객체 = await 응답.json();
+    console.log("정답 객체", 정답_객체);
+    const 정답 = 정답_객체.answer;
+    console.log("정답", 정답);
+
     for (let i = 0; i < 5; i++) {
       // 정답 확인
       const block = document.querySelector(
