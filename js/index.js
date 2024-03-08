@@ -31,13 +31,23 @@ function appStart() {
         `.board-block[data-index='${attempts}${i}']`
       );
       const 입력한_글자 = block.innerText;
+      const keyboard = document.querySelector(
+        `.keyboard-block[data-key='${입력한_글자}']`
+      );
       const 정답_글자 = 정답[i];
       if (입력한_글자 === 정답_글자) {
         맞은_개수++;
         block.style.background = "#6AAA63";
-      } else if (정답.includes(입력한_글자)) block.style.background = "#C9B458";
+        keyboard.style.background = "#6AAA63";
+      } else if (정답.includes(입력한_글자)) {
+        block.style.background = "#C9B458";
+        keyboard.style.background = "#C9B458";
+      }
       // includes -> 포함이 되어있는지 물어보는 함수 있으면 true 없으면 false
-      else block.style.background = "#787C7E";
+      else {
+        block.style.background = "#787C7E";
+        keyboard.style.background = "#787C7E";
+      }
       block.style.color = "white";
     }
     if (맞은_개수 === 5) gameover();
@@ -83,6 +93,12 @@ function appStart() {
 
   startTimer();
   window.addEventListener("keydown", handleKeydown);
+
+  window.document.body.querySelectorAll("[data-key]").forEach((x) => {
+    x.addEventListener("click", () => {
+      console.log(x.dataset["key"]);
+    });
+  });
 }
 
 appStart();
