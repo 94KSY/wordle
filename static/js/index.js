@@ -12,19 +12,23 @@ function appStart() {
       "display:flex; justify-content:center; align-items:center; position:absolute; top:40vh; left:45vw; background-color:white; width=200px; height:100px";
     document.body.appendChild(div);
   };
+
   const nextLine = () => {
     if (attempts === 6) return gameover();
     attempts++;
     index = 0;
   };
+
   const gameover = () => {
     window.removeEventListener("keydown", handleKeydown);
+    window.removeEventListener("click", handleClick);
     displayGameover();
     clearInterval(timer);
   };
 
   const handleEnterKey = async () => {
     // await라는 구문을 사용하기위해 함수 앞에 async를 추가
+    // await는 서버에서 서버로 요청을 보낸 다음 그거에 대한 응답이 올때까지 기다리는 구문
     let 맞은_개수 = 0;
     const 응답 = await fetch("/answer"); // fetch는 자바스크립트에서 서버로 요청을 보낼 때 쓰는 함수
     console.log("응답", 응답);
@@ -39,9 +43,6 @@ function appStart() {
         `.board-block[data-index='${attempts}${i}']`
       );
       const 입력한_글자 = block.innerText;
-      const keyboard = document.querySelector(
-        `.keyboard-block[data-key='${입력한_글자}']`
-      );
       const 정답_글자 = 정답[i];
       if (입력한_글자 === 정답_글자) {
         맞은_개수++;
@@ -70,6 +71,7 @@ function appStart() {
     }
     if (index !== 0) index--;
   };
+
   const startTimer = () => {
     const 시작_시간 = new Date();
     function setTime() {
@@ -82,6 +84,7 @@ function appStart() {
     }
     timer = setInterval(setTime, 1000);
   };
+
   const handleKeydown = (event) => {
     const key = event.key.toUpperCase(); // 소문자를 대문자로 바꿔줌
     const keyCode = event.keyCode;
@@ -98,15 +101,17 @@ function appStart() {
       index++;
     }
   };
+  const handleClick = (e) => {
+    console.log("클릭됨", e);
+    const key = e.target.dataset.key;
+    const thisBlock = document.querySelector(
+      `.board-column[data-index='${attempts}${index}']`
+    );
+  };
 
   startTimer();
   window.addEventListener("keydown", handleKeydown);
-
-  window.document.body.querySelectorAll("[data-key]").forEach((x) => {
-    x.addEventListener("click", () => {
-      console.log(x.dataset["key"]);
-    });
-  });
+  window.addEventListener("Click", handleClick);
 }
 
 appStart();
